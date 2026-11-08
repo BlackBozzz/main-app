@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "paths": {
+      "@argent/webapp-common": [
+        "./.local-libs/webapp-common"
+      ]
+    }
+  }
+}
