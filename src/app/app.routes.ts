@@ -6,4 +6,5 @@ export const routes: Routes = [
   ...ARGENT_AUTH_ROUTES,
   ...ARGENT_ROUTES,
   { path: '', pathMatch: 'full', redirectTo: 'admin' },
+  { path: '**', redirectTo: 'admin' },
 ];

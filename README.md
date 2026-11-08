@@ -1,59 +1,60 @@
-# MainApp
+# main-app
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.5.
+Демо-хост библиотеки [`@argent/webapp-common`](../webapp-common/README.md) (Angular 21,
+PrimeNG 21): вход и админка Argent поверх `../main-backend`. Своего кода почти нет —
+`app.config.ts` и `app.routes.ts`.
 
-## Development server
+## Запуск
 
-To start a local development server, run:
+1. **Node 22.12+ или 24 LTS** (системный подходит).
+
+   Проверка: `node -v` — `v22.12.0`/`v24.x` или новее.
+
+2. **Пакет библиотеки 0.6.0** (собирается из соседней папки):
+
+   ```bash
+   cd ../webapp-common && npm install && npm run build && cd dist/webapp-common && npm pack
+   cd ../../../main-app
+   npm install ../webapp-common/dist/webapp-common/argent-webapp-common-0.6.0.tgz
+   ```
+
+   После пересборки архива той же версии повторите последнюю команду: обычный `npm install`
+   возьмёт старый пакет из кэша.
+
+   Проверка: `npm ls @argent/webapp-common` показывает `0.6.0`.
+
+3. **Backend** `../main-backend` запущен на `http://localhost:8080` (см. его README).
+
+4. **Dev-сервер:**
+
+   ```bash
+   npm start      # ng serve, http://localhost:4200
+   ```
+
+   `/api/**` проксируется на `http://localhost:8080` (`proxy.conf.json`, подключён в `angular.json`).
+
+   Проверка: `http://localhost:4200/` открывает страницу входа.
+
+## Вход
+
+Логин `admin`; пароль — только если backend запущен без профиля `demo` (значение
+`ARGENT_ADMIN_PASSWORD`). Пользователей с ролями `READER`, `EDITOR`, `MANAGER` создайте в
+«Пользователи» и войдите под ними, чтобы увидеть, как меняются кнопки.
+
+## Что посмотреть в админке
+
+- **Справочники** → «Демо-заказы» (`dict_demo_order`), «Страны» и др.: поиск, фильтры, кнопки
+  **Экспорт XLSX/CSV** и **Импорт** (диалог UPSERT/REPLACE с отчётом по строкам; нужно действие `import`).
+- Выберите запись → «Редактировать»: вкладки **«Поля»**, **«Файлы»** (загрузка, скачивание,
+  удаление вложений), **«История»** (кто и что менял, включая файлы).
+- **Журнал изменений** (`/admin/audit`, только `admin`): все изменения с фильтрами по таблице,
+  записи, действию и периоду.
+- **Пользователи** и **Роли** (`admin`): создание, назначение ролей, редактор грантов.
+- Ошибки прав: под `READER` нет кнопок изменения; 403 от backend — toast «Недостаточно прав».
+
+## Сборка и тесты
 
 ```bash
-ng serve
+npm run build      # бюджет initial поднят до 1.5MB из-за PrimeNG
+npm test
 ```
-
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
