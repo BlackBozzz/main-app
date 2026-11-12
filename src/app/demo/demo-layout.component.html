@@ -1,0 +1,36 @@
+<div class="demo-shell">
+  <aside class="demo-sidebar">
+    <a routerLink="/demo" class="demo-brand">
+      <span class="brand-mark"><i class="pi pi-box"></i></span>
+      <span><strong>AtomSkills</strong><small>Библиотека в действии</small></span>
+    </a>
+    <div class="nav-label">ДЕМОНСТРАЦИИ</div>
+    <nav class="side-nav" aria-label="Демо-разделы">
+      @for (item of nav; track item.path) {
+        <a [routerLink]="item.path" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: item.exact }">
+          <i [class]="item.icon"></i><span>{{ item.label }}</span>
+        </a>
+      }
+    </nav>
+    <div class="nav-label nav-label-secondary">ГОТОВЫЕ РАЗДЕЛЫ БИБЛИОТЕКИ</div>
+    <nav class="side-nav" aria-label="Библиотека Argent">
+      <a routerLink="/admin"><i class="pi pi-th-large"></i><span>Администрирование</span><i class="pi pi-external-link external"></i></a>
+      <a routerLink="/admin/dictionaries"><i class="pi pi-book"></i><span>Справочники</span></a>
+      <a routerLink="/admin/users"><i class="pi pi-users"></i><span>Пользователи и роли</span></a>
+      <a routerLink="/admin/audit"><i class="pi pi-history"></i><span>Аудит</span></a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="user-chip"><i class="pi pi-user"></i><span>{{ user()?.displayName || user()?.login || 'Пользователь' }}</span></div>
+      <button class="sidebar-logout" type="button" (click)="logout()"><i class="pi pi-sign-out"></i> Выйти</button>
+    </div>
+  </aside>
+  <main class="demo-main">
+    <header class="demo-topbar">
+      <span><span class="live-dot"></span> Локальный стенд · main-app + main-backend</span>
+      <a routerLink="/admin">Открыть Argent Admin <i class="pi pi-arrow-up-right"></i></a>
+    </header>
+    <div class="demo-content"><router-outlet /></div>
+  </main>
+</div>
+
+<argent-report-dialog />

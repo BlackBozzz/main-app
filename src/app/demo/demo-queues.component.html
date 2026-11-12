@@ -1,0 +1,15 @@
+<div class="page-head"><div class="eyebrow">02 / ARGENT QUEUE</div><h1>Фоновые задачи</h1><p>Запусти N пустых заданий и посмотри, как библиотека обрабатывает их в реальной очереди.</p></div>
+<div class="page-grid">
+  <section class="panel"><div class="panel-heading"><h2>Генератор задач</h2><span class="tag">Без побочных эффектов</span></div>
+    <p class="secondary-text">Обработчик пишет сообщение в лог. Данные приложения не изменяются.</p>
+    <form (ngSubmit)="create()"><label class="form-label" for="tasks-count">Количество заданий (1–100)</label>
+      <input class="field" id="tasks-count" name="count" type="number" required min="1" max="100" [(ngModel)]="count">
+      <div class="action-row"><button class="btn btn-primary" type="submit" [disabled]="pending() || count < 1 || count > 100"><i class="pi pi-play"></i> {{ pending() ? 'Создаём…' : 'Запустить задания' }}</button><button class="btn btn-muted" type="button" (click)="refresh()"><i class="pi pi-refresh"></i> Обновить</button></div>
+    </form>
+    @if (success()) { <p class="notice success">{{ success() }}</p> }
+    @if (error()) { <p class="notice error">{{ error() }}</p> }
+    <div class="stats-grid"><div><strong>{{ queue()?.pending ?? '—' }}</strong><span>Ожидают</span></div><div><strong>{{ queue()?.running ?? '—' }}</strong><span>В работе</span></div><div><strong>{{ queue()?.succeeded ?? '—' }}</strong><span>Завершены</span></div><div><strong>{{ queue()?.retryWait ?? '—' }}</strong><span>Повтор</span></div></div>
+    <p class="secondary-text small">Статистика обновляется по кнопке, без опроса сервера.</p>
+  </section>
+  <aside class="aside-stack"><section class="panel soft"><h3>Управление задачами</h3><p>В готовой админке Argent можно просматривать попытки, ошибки, менять приоритет и повторять задачи.</p><a routerLink="/admin/queues" class="text-link">Открыть очередь в админке <i class="pi pi-arrow-right"></i></a></section><section class="panel code-panel"><div class="code-head">JAVA · ПРИМЕР</div><pre><code>{{ example }}</code></pre></section></aside>
+</div>

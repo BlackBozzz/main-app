@@ -1,0 +1,53 @@
+<div class="page-head">
+  <div class="eyebrow">06 / ARGENT ATTACHMENTS</div>
+  <h1>Вложения и файлы</h1>
+  <p>Рабочий пример универсального компонента из webapp-common: файлы можно загрузить, просмотреть, скачать или удалить. Права проверяются backend.</p>
+</div>
+<div class="page-grid">
+  <section class="panel">
+    <div class="panel-heading">
+      <h2>Файлы заказа</h2>
+      <span class="tag">Argent Attachments</span>
+    </div>
+    <div class="filters">
+      <div class="filter-grow">
+        <label class="form-label" for="file-order">ID существующего заказа</label>
+        <input
+          class="field"
+          id="file-order"
+          name="orderId"
+          type="number"
+          min="1"
+          placeholder="Например, 1"
+          [(ngModel)]="orderId"
+        />
+      </div>
+      <button
+        class="btn btn-muted align-end"
+        type="button"
+        (click)="load()"
+      >
+        <i class="pi pi-refresh"></i> Загрузить список
+      </button>
+    </div>
+    @if (activeOrderId(); as id) {
+      <argent-attachments
+        entityType="dict_demo_order"
+        [entityId]="id"
+      />
+    } @else {
+      <p class="secondary-text">Укажи ID заказа, чтобы увидеть его вложения.</p>
+    }
+  </section>
+  <aside class="aside-stack">
+    <section class="panel soft">
+      <h3>Требуется заказ</h3>
+      <p>Сначала <a routerLink="/demo/orders">создай демо-заказ</a> и скопируй его ID. Вложения привязаны к паре <code>entityType</code> + <code>entityId</code>.</p>
+      <p>PDF, изображения, текст, аудио и видео можно открыть в окне просмотра. Другие форматы — скачать.</p>
+    </section>
+    <section class="panel code-panel">
+      <div class="code-head">ANGULAR · ПРИМЕР</div>
+      <pre><code>{{ example }}</code></pre>
+    </section>
+  </aside>
+</div>

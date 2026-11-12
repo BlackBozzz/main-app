@@ -1,0 +1,16 @@
+<div class="page-head"><div class="eyebrow">04 / JASPERREPORTS</div><h1>Генерация отчётов</h1><p>Здесь нет SQL: данные зашиты в Java и передаются JasperReports. Попробуй обычный отчёт и компонент Table с subDataset.</p></div>
+<div class="page-grid">
+  <section class="panel"><div class="panel-heading"><h2>Фиктивные продажи</h2><span class="tag">5 строк · без БД</span></div>
+    <div class="table-wrap"><table class="data-table"><thead><tr><th>Товар</th><th>Категория</th><th>Кол-во</th><th>Цена</th><th>Сумма</th></tr></thead><tbody>@for (row of rows(); track row.product) { <tr><td><strong>{{ row.product }}</strong></td><td>{{ row.department }}</td><td>{{ row.quantity }}</td><td>{{ row.price }}</td><td>{{ row.amount }}</td></tr> }</tbody></table></div>
+    <label class="form-label" for="reports-format">Формат выгрузки</label><select class="field short-field" id="reports-format" name="format" [(ngModel)]="format"><option value="pdf">PDF</option><option value="xlsx">XLSX</option><option value="docx">DOCX</option></select>
+    <p class="muted">Кнопки «Скачать» используют выбранный формат. «Посмотреть» открывает PDF-предпросмотр, откуда можно выгрузить PDF, Excel или Word.</p>
+    <div class="action-row">
+      <button class="btn btn-primary" type="button" [disabled]="reports.downloading()" (click)="load('static')"><i class="pi pi-download"></i> Скачать обычный</button>
+      <button class="btn btn-muted" type="button" (click)="show('static')"><i class="pi pi-eye"></i> Посмотреть обычный</button>
+      <button class="btn btn-primary" type="button" [disabled]="reports.downloading()" (click)="load('table')"><i class="pi pi-download"></i> Скачать Jasper Table</button>
+      <button class="btn btn-muted" type="button" (click)="show('table')"><i class="pi pi-eye"></i> Посмотреть Jasper Table</button>
+    </div>
+    @if (error() || reports.error()) { <p class="notice error">{{ error() || reports.error() }}</p> }
+  </section>
+  <aside class="aside-stack"><section class="panel soft"><h3>Два способа</h3><p><strong>Detail:</strong> обычный JRXML печатает каждую строку через <code>.data(rows)</code>.</p><p><strong>Table:</strong> компонент таблицы Jasper с <code>subDataset</code>, данные приходят через параметр <code>JRDataSource</code>.</p></section><section class="panel code-panel"><div class="code-head">JAVA · ПРИМЕР</div><pre><code>{{ example }}</code></pre></section></aside>
+</div>

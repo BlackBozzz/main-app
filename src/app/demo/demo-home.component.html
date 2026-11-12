@@ -1,0 +1,26 @@
+<section class="hero">
+  <div class="eyebrow"><span class="hero-line"></span> DEVELOPER PLAYGROUND</div>
+  <h1>Все возможности <em>Argent</em><br>в одном приложении.</h1>
+  <p>Небольшие работающие примеры для проверки сервисов и быстрого повторного использования в новых проектах. Выбирай модуль и запускай сценарий.</p>
+  <div class="hero-actions">
+    <a routerLink="/demo/queues" class="btn btn-primary"><i class="pi pi-play"></i> Запустить пример</a>
+    <a routerLink="/admin" class="btn btn-muted"><i class="pi pi-th-large"></i> Готовая админка</a>
+  </div>
+  <div class="hero-watermark">A</div>
+</section>
+<div class="section-line"><div><span class="mini-label">КАТАЛОГ</span><h2>Сервисы библиотеки</h2></div><span>6 интерактивных примеров</span></div>
+<section class="feature-grid">
+  @for (item of sections; track item.path; let i = $index) {
+    <a class="feature-card" [routerLink]="item.path">
+      <div class="feature-top"><span class="feature-icon"><i [class]="item.icon"></i></span><span class="feature-num">0{{ i + 1 }}</span></div>
+      <span class="feature-category">{{ item.tag }}</span>
+      <h3>{{ item.title }}</h3>
+      <p>{{ item.note }}</p>
+      <div class="feature-foot"><code>{{ item.hint }}</code><i class="pi pi-arrow-up-right"></i></div>
+    </a>
+  }
+</section>
+<section class="library-strip">
+  <div><i class="pi pi-cog"></i><strong>Остальное уже есть в webapp-common</strong><p>Справочники, пользователи, права, аудит, импорт и экспорт доступны из готовой панели администрирования.</p></div>
+  <a routerLink="/admin" class="btn btn-outline">Перейти в админку <i class="pi pi-arrow-right"></i></a>
+</section>

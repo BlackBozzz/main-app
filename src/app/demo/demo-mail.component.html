@@ -1,0 +1,28 @@
+<div class="page-head"><div class="eyebrow">01 / ARGENT MAIL</div><h1>Почтовая рассылка</h1><p>Каждый получатель — отдельная задача в ArgentQueue. Отправка происходит асинхронно.</p></div>
+<div class="page-grid">
+  <section class="panel">
+    <div class="panel-heading"><h2>Новая рассылка</h2><span class="status-dot" [class.ok]="active()" [class.off]="active() === false">{{ active() === null ? 'Проверка…' : active() ? 'SMTP включён' : 'SMTP отключён' }}</span></div>
+    @if (active() === false) { <p class="notice warning">Почтовый сервис выключен. Настройте <code>ARGENT_MAIL_ENABLED=true</code>, SMTP и перезапустите backend.</p> }
+    <form (ngSubmit)="send()">
+      <label class="form-label" for="mail-type">Получатели</label>
+      <select class="field" id="mail-type" name="target" [(ngModel)]="target">
+        @for (type of types; track type.value) { <option [value]="type.value">{{ type.label }}</option> }
+      </select>
+      @if (target !== 'all') {
+        <label class="form-label" for="mail-recipient">{{ target === 'role' ? 'Код роли, например ADMIN' : target === 'emails' || target === 'roles' || target === 'userIds' ? 'Значения через запятую' : target === 'userId' ? 'UUID пользователя' : 'Email получателя' }}</label>
+        <input class="field" id="mail-recipient" name="recipient" [required]="true" [(ngModel)]="recipient" placeholder="Введите адрес, ID или роль">
+      }
+      <label class="form-label" for="mail-subject">Тема</label>
+      <input class="field" id="mail-subject" name="subject" required maxlength="255" [(ngModel)]="subject">
+      <label class="form-label" for="mail-body">Текст</label>
+      <textarea class="field" id="mail-body" name="body" required rows="5" [(ngModel)]="body"></textarea>
+      <div class="action-row"><button class="btn btn-primary" type="submit" [disabled]="pending() || !active()"><i class="pi pi-send"></i> {{ pending() ? 'Ставим задачи…' : 'Поставить в очередь' }}</button></div>
+    </form>
+    @if (error()) { <p class="notice error">{{ error() }}</p> }
+    @if (result(); as info) { <div class="notice success"><strong>Задачи созданы: {{ info.queued }}</strong><span>Выбрано: {{ info.selected }} · Пропущено: {{ info.skipped }}. Доставка ещё не завершена.</span></div> }
+  </section>
+  <aside class="aside-stack">
+    <section class="panel soft"><h3>Как устроено</h3><p>Демо-контроллер вызывает <code>ArgentQueuedMailService</code>. Библиотека ищет адреса и создаёт задания в очереди <code>argent-mail</code>.</p><a routerLink="/admin/queues" class="text-link">Мониторинг очередей <i class="pi pi-arrow-right"></i></a></section>
+    <section class="panel code-panel"><div class="code-head"><span>JAVA · ПРИМЕР</span></div><pre><code>{{ example }}</code></pre></section>
+  </aside>
+</div>
