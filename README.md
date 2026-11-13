@@ -58,3 +58,7 @@ PrimeNG 21): вход и админка Argent поверх `../main-backend`. �
 npm run build      # бюджет initial поднят до 1.5MB из-за PrimeNG
 npm test
 ```
+
+## Новый демонстрационный стенд
+
+Главная страница `/demo`: почта, очереди, QueryDSL, JasperReports, статусы/номера и файлы. Полный гид — [`README_SHOWCASE_RU.md`](../README_SHOWCASE_RU.md).
