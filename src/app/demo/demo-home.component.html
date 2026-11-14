@@ -8,7 +8,7 @@
   </div>
   <div class="hero-watermark">A</div>
 </section>
-<div class="section-line"><div><span class="mini-label">КАТАЛОГ</span><h2>Сервисы библиотеки</h2></div><span>6 интерактивных примеров</span></div>
+<div class="section-line"><div><span class="mini-label">КАТАЛОГ</span><h2>Сервисы библиотеки</h2></div><span>{{ sections.length }} интерактивных примеров</span></div>
 <section class="feature-grid">
   @for (item of sections; track item.path; let i = $index) {
     <a class="feature-card" [routerLink]="item.path">

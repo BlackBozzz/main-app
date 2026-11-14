@@ -15,5 +15,6 @@ export class DemoHomeComponent {
     { icon: 'pi pi-file-pdf', tag: 'Документы', title: 'JasperReports', path: '/demo/reports', note: 'PDF, XLSX, DOCX из Java-данных', hint: 'ReportService' },
     { icon: 'pi pi-sitemap', tag: 'Бизнес-процессы', title: 'Заказы и статусы', path: '/demo/orders', note: 'Номера, переходы и аудит', hint: 'NumberGenerator · StatusTransitionService' },
     { icon: 'pi pi-paperclip', tag: 'Файлы', title: 'Вложения', path: '/demo/files', note: 'Загрузка, скачивание и удаление', hint: 'AttachmentService' },
+    { icon: 'pi pi-palette', tag: 'Frontend', title: 'Каталог UI-компонентов', path: '/demo/components/table', note: 'Живые примеры, API и готовый код для Angular', hint: '@argent/webapp-common' },
   ];
 }

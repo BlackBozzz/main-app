@@ -17,6 +17,8 @@ export const routes: Routes = [
       { path: 'reports', title: 'Argent Reports', loadComponent: () => import('./demo/demo-reports.component').then(m => m.DemoReportsComponent) },
       { path: 'orders', title: 'Argent Status & Sequence', loadComponent: () => import('./demo/demo-orders.component').then(m => m.DemoOrdersComponent) },
       { path: 'files', title: 'Argent Attachments', loadComponent: () => import('./demo/demo-files.component').then(m => m.DemoFilesComponent) },
+      { path: 'components', pathMatch: 'full', redirectTo: 'components/table' },
+      { path: 'components/:slug', title: 'Компоненты webapp-common', loadComponent: () => import('./component-docs/component-docs.page').then(m => m.ComponentDocsPage) },
     ],
   },
   { path: '', pathMatch: 'full', redirectTo: 'demo' },

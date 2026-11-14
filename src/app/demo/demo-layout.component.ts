@@ -20,6 +20,7 @@ export class DemoLayoutComponent {
     { path: '/demo/reports', label: 'JasperReports', icon: 'pi pi-file-pdf', exact: false },
     { path: '/demo/orders', label: 'Статусы и номера', icon: 'pi pi-shopping-bag', exact: false },
     { path: '/demo/files', label: 'Вложения', icon: 'pi pi-paperclip', exact: false },
+    { path: '/demo/components', label: 'Компоненты UI', icon: 'pi pi-palette', exact: false },
   ];
 
   logout(): void {

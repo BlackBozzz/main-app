@@ -1,0 +1,367 @@
+<div class="component-docs">
+  <aside class="catalog" aria-label="Каталог компонентов">
+    <div class="catalog-head">
+      <div class="catalog-eyebrow">ARGENT UI · СПРАВОЧНИК</div>
+      <h2>Компоненты</h2>
+      <p>Работающие примеры и готовый код</p>
+    </div>
+    <div class="catalog-search">
+      <i class="pi pi-search" aria-hidden="true"></i>
+      <input
+        type="search"
+        placeholder="Поиск компонентов..."
+        aria-label="Поиск компонентов"
+        [value]="search()"
+        (input)="changeSearch($event)"
+      />
+    </div>
+    <div class="catalog-categories" aria-label="Фильтр по категории">
+      <button
+        type="button"
+        [class.selected]="category() === 'Все'"
+        (click)="category.set('Все')"
+      >Все</button>
+      @for (group of groups; track group) {
+        <button
+          type="button"
+          [class.selected]="category() === group"
+          (click)="category.set(group)"
+        >{{ group }}</button>
+      }
+    </div>
+    <nav class="catalog-navigation">
+      @for (group of groups; track group) {
+        @if (docsForGroup(group).length) {
+          <div class="catalog-group">{{ group }}</div>
+          @for (item of docsForGroup(group); track item.slug) {
+            <a
+              [routerLink]="['/demo/components', item.slug]"
+              [class.active]="doc().slug === item.slug"
+            >
+              <i [class]="item.icon" aria-hidden="true"></i>
+              <span>{{ item.title }}</span>
+            </a>
+          }
+        }
+      }
+      @if (!filteredDocs().length) {
+        <p class="catalog-empty">Ничего не найдено. Попробуй другое название.</p>
+      }
+    </nav>
+    <div class="catalog-foot">{{ docs.length }} разделов · Angular 21 · PrimeNG 21</div>
+  </aside>
+
+  <article class="docs-detail">
+    <div class="docs-breadcrumb">
+      <a routerLink="/demo">Демонстрации</a>
+      <i class="pi pi-chevron-right" aria-hidden="true"></i>
+      <span>Компоненты</span>
+      <i class="pi pi-chevron-right" aria-hidden="true"></i>
+      <strong>{{ doc().title }}</strong>
+    </div>
+    <header class="docs-header">
+      <div class="docs-header-icon"><i [class]="doc().icon" aria-hidden="true"></i></div>
+      <div>
+        <div class="docs-caption">{{ doc().group }}</div>
+        <h1>{{ doc().title }}</h1>
+        <p>{{ doc().summary }}</p>
+        <code>{{ doc().selector }}</code>
+      </div>
+    </header>
+    <div class="tags">
+      @for (tag of doc().tags; track tag) { <span>{{ tag }}</span> }
+      @if (doc().requiresBackend) { <span class="backend-tag"><i class="pi pi-server"></i> Требует backend</span> }
+    </div>
+    <nav class="docs-tabs" aria-label="Разделы документации">
+      <button type="button" [class.active]="tab() === 'demo'" (click)="tab.set('demo')">
+        <i class="pi pi-play-circle"></i> Примеры
+      </button>
+      <button type="button" [class.active]="tab() === 'api'" (click)="tab.set('api')">
+        <i class="pi pi-list"></i> API и параметры
+      </button>
+      <button type="button" [class.active]="tab() === 'notes'" (click)="tab.set('notes')">
+        <i class="pi pi-book"></i> Как использовать
+      </button>
+    </nav>
+
+    @if (tab() === 'demo') {
+      <section class="docs-examples">
+        <div class="examples-heading">
+          <div><h2>Примеры использования</h2><p>Выбери вариант, попробуй в интерфейсе и скопируй код.</p></div>
+          <span class="examples-count">{{ doc().examples.length }} вариант(ов)</span>
+        </div>
+        <div class="example-switch" aria-label="Варианты использования">
+          @for (variant of doc().examples; track variant.title; let i = $index) {
+            <button
+              type="button"
+              [class.selected]="exampleIndex() === i"
+              (click)="showExample(i)"
+            >{{ variant.title }}</button>
+          }
+        </div>
+        <div class="preview-card">
+          <div class="preview-card-header"><strong>{{ example().title }}</strong><span>Живой пример</span></div>
+          <p class="preview-description">{{ example().description }}</p>
+          <div class="preview-surface">
+            @switch (doc().slug) {
+              @case ('table') {
+                @if (exampleIndex() === 0) {
+                  <argent-table
+                    title="Сотрудники"
+                    [rows]="employees"
+                    [lazy]="false"
+                    [showExport]="false"
+                    [height]="'290px'"
+                    (selectionChange)="selectRow($event)"
+                  >
+                    <argent-table-column field="id" header="ID" type="number" [sortable]="true" />
+                    <argent-table-column field="name" header="ФИО" [sortable]="true" />
+                    <argent-table-column field="department" header="Отдел" />
+                  </argent-table>
+                  <p class="demo-hint">Выбрано: {{ tableSelection() }}</p>
+                } @else if (exampleIndex() === 1) {
+                  <argent-table
+                    title="Заявки"
+                    [rows]="requests"
+                    [lazy]="false"
+                    [showExport]="false"
+                    [showFilters]="true"
+                    [height]="'290px'"
+                  >
+                    <argent-table-column field="id" header="№" type="number" [sortable]="true" />
+                    <argent-table-column field="subject" header="Тема" [filterable]="true" />
+                    <argent-table-column
+                      field="status"
+                      header="Статус"
+                      type="status"
+                      [filterable]="true"
+                      [filterOptions]="statusOptions"
+                      [labelMap]="statusLabels"
+                      [severityMap]="statusSeverity"
+                    />
+                  </argent-table>
+                } @else {
+                  <div class="guide-message"><i class="pi pi-info-circle"></i> Для серверной пагинации нужен REST endpoint. Рабочий пример: <a routerLink="/demo/querydsl">QueryDSL и Page</a>.</div>
+                }
+              }
+              @case ('columns') {
+                <argent-table title="Колонки" [rows]="employees" [lazy]="false" [showExport]="false" [height]="'290px'">
+                  <argent-table-column field="id" header="ID" type="number" [sortable]="true" />
+                  <argent-table-column field="name" header="ФИО" />
+                  @if (exampleIndex() === 0) {
+                    <argent-table-column field="active" header="Активен" type="boolean" />
+                  } @else {
+                    <argent-table-column field="actions" header="Действие" type="custom">
+                      <ng-template argentTableCell let-row>
+                        <button class="preview-small-button" type="button" (click)="toolbarAction(rowName(row))">Открыть</button>
+                      </ng-template>
+                    </argent-table-column>
+                  }
+                </argent-table>
+                @if (toolbarMessage()) { <p class="demo-hint">{{ toolbarMessage() }}</p> }
+              }
+              @case ('toolbar') {
+                <argent-table title="Сотрудники" [rows]="employees" [lazy]="false" [showExport]="false" [height]="'290px'" (refreshRequested)="toolbarAction('Обновить')">
+                  <ng-template argentTableToolbarStart>
+                    <button class="preview-small-button" type="button" (click)="toolbarAction('Добавить')"><i class="pi pi-plus"></i> Добавить</button>
+                  </ng-template>
+                  <ng-template argentTableToolbarEnd>
+                    <button class="preview-small-button" type="button" (click)="toolbarAction('Помощь')">Помощь</button>
+                  </ng-template>
+                  <argent-table-column field="name" header="Сотрудник" />
+                  <argent-table-column field="department" header="Отдел" />
+                </argent-table>
+                @if (toolbarMessage()) { <p class="demo-hint">{{ toolbarMessage() }}</p> }
+              }
+              @case ('attachments') {
+                <div class="entity-picker">
+                  <label for="docs-entity-attachments">ID существующего заказа</label>
+                  <input
+                    id="docs-entity-attachments"
+                    type="text"
+                    placeholder="Например, 1"
+                    [(ngModel)]="entityIdInput"
+                  />
+                  <button class="preview-small-button" type="button" (click)="activateEntity()">Открыть вложения</button>
+                </div>
+                @if (entityId(); as id) {
+                  <argent-attachments entityType="dict_demo_order" [entityId]="id" [readonly]="exampleIndex() === 1" />
+                } @else {
+                  <div class="guide-message"><i class="pi pi-paperclip"></i> Сначала <a routerLink="/demo/orders">создай заказ</a>, затем введи его ID. Для отдельного примера есть <a routerLink="/demo/files">страница файлов</a>.</div>
+                }
+              }
+              @case ('reports') {
+                <div class="demo-action-box">
+                  <i class="pi pi-file-pdf big-demo-icon" aria-hidden="true"></i>
+                  <div><strong>Отчёт по тестовым продажам</strong><p>Данные зашиты в main-backend; JasperReports создаёт настоящий файл.</p></div>
+                  @if (exampleIndex() === 0) {
+                    <button class="preview-small-button primary" type="button" [disabled]="reports.downloading()" (click)="downloadReport()"><i class="pi pi-download"></i> Скачать XLSX</button>
+                  } @else {
+                    <button class="preview-small-button primary" type="button" (click)="previewReport()"><i class="pi pi-eye"></i> Показать PDF</button>
+                  }
+                </div>
+                @if (reports.error()) { <p class="docs-error" role="alert">{{ reports.error() }}</p> }
+              }
+              @case ('audit') {
+                <div class="entity-picker">
+                  <label for="docs-entity-audit">ID существующего заказа</label>
+                  <input
+                    id="docs-entity-audit"
+                    type="text"
+                    placeholder="Например, 1"
+                    [(ngModel)]="entityIdInput"
+                  />
+                  <button class="preview-small-button" type="button" (click)="activateEntity()">Показать историю</button>
+                </div>
+                @if (entityId(); as id) {
+                  <argent-audit-log entityType="dict_demo_order" [entityId]="id" [pageSize]="10" />
+                } @else {
+                  <div class="guide-message"><i class="pi pi-history"></i> Измени <a routerLink="/demo/orders">демо-заказ</a> и введи его ID, чтобы увидеть историю.</div>
+                }
+              }
+              @case ('dynamic-form') {
+                <div class="form-demo">
+                  @if (exampleIndex() === 1) {
+                    <argent-dictionary-dynamic-form [schema]="sampleSchema" [form]="sampleForm" />
+                    <div class="demo-form-footer">
+                      <button class="preview-small-button" type="button" (click)="validateDemoForm()">Проверить</button>
+                      <pre>{{ sampleForm.getRawValue() | json }}</pre>
+                    </div>
+                  } @else {
+                    <argent-dictionary-dynamic-form
+                      #businessForm
+                      [schema]="businessSchema"
+                      [dtoClass]="demoDtoClass"
+                      [(dto)]="demoDocument"
+                    />
+                    <div class="demo-form-footer">
+                      <button class="preview-small-button" type="button" (click)="businessForm.markAllAsTouched()">Проверить поля</button>
+                      <button class="preview-small-button" type="button" (click)="loadOtherDemoDocument()">Загрузить другой DTO</button>
+                      <pre>{{ demoDocument | json }}</pre>
+                    </div>
+                  }
+                </div>
+              }
+              @case ('entity-select') {
+                <div class="form-demo">
+                  @if (exampleIndex() === 1) {
+                    <argent-entity-select
+                      label="Исполнители"
+                      valueField="id"
+                      labelField="name"
+                      [multiple]="true"
+                      [optionsLoader]="demoEmployeeOptions"
+                      [recordLoader]="demoEmployeeRecord"
+                      [(ngModel)]="demoEmployeeIds"
+                    />
+                    <pre>{{ demoEmployeeIds | json }}</pre>
+                  } @else {
+                    <argent-entity-select
+                      label="Ответственный"
+                      valueField="id"
+                      labelField="name"
+                      [optionsLoader]="demoEmployeeOptions"
+                      [recordLoader]="demoEmployeeRecord"
+                      [(ngModel)]="demoEmployeeId"
+                    />
+                    <pre>{{ demoEmployeeId | json }}</pre>
+                  }
+                  <p class="demo-hint">Данные локальные, backend не нужен. Для настоящих связей передай свой endpoint.</p>
+                </div>
+              }
+              @case ('dictionary-table') {
+                <argent-dictionary-record-table
+                  [schema]="sampleSchema"
+                  [page]="demoDictionaryPage"
+                  [loading]="false"
+                />
+                <p class="demo-hint">Демонстрационные строки фиксированы. Для постраничного чтения подключи обработчик queryChange.</p>
+              }
+              @case ('dictionary-dialog') {
+                <div class="guide-message"><i class="pi pi-window-maximize"></i> Диалог работает с API справочника. Здесь можно открыть безопасный режим просмотра без сохранения.</div>
+                <div class="demo-form-footer">
+                  <button class="preview-small-button" type="button" (click)="dialogVisible.set(true)">Открыть диалог</button>
+                </div>
+                <argent-dictionary-record-dialog
+                  code="example"
+                  [schema]="sampleSchema"
+                  [visible]="dialogVisible()"
+                  [readonly]="true"
+                  (visibleChange)="dialogVisible.set($event)"
+                />
+              }
+              @case ('grants') {
+                <div class="grants-demo">
+                  <argent-grants-editor [formControl]="grantControl" />
+                  <pre>{{ grantControl.getRawValue() | json }}</pre>
+                </div>
+              }
+              @case ('errors') {
+                <div class="field-demo">
+                  <label for="docs-email">Email</label>
+                  <input
+                    id="docs-email"
+                    type="email"
+                    placeholder="user@example.com"
+                    [formControl]="emailControl"
+                  />
+                  <argent-field-error [control]="emailControl" />
+                  @if (exampleIndex() === 0) {
+                    <button class="preview-small-button" type="button" (click)="validateEmail()">Проверить</button>
+                  } @else {
+                    <button class="preview-small-button" type="button" (click)="simulateServerError()">Сымитировать ошибку API</button>
+                  }
+                </div>
+              }
+              @case ('admin') {
+                <div class="admin-demo-links">
+                  <a routerLink="/admin"><i class="pi pi-th-large"></i> Открыть админку</a>
+                  <a routerLink="/admin/users"><i class="pi pi-users"></i> Пользователи</a>
+                  <a routerLink="/admin/audit"><i class="pi pi-history"></i> Аудит</a>
+                </div>
+              }
+            }
+          </div>
+        </div>
+        <div class="source-card">
+          <div class="source-head">
+            <div><span>{{ example().language === 'html' ? 'ANGULAR HTML' : 'TYPESCRIPT' }}</span><strong>Готовый пример кода</strong></div>
+            <button type="button" (click)="copyExample()"><i class="pi pi-copy"></i> {{ copyStatus() === 'copied' ? 'Скопировано' : 'Копировать' }}</button>
+          </div>
+          <pre><code>{{ example().code }}</code></pre>
+          @if (copyStatus() === 'failed') { <p class="copy-error">Буфер обмена недоступен: выдели текст кода и скопируй вручную.</p> }
+        </div>
+      </section>
+    } @else if (tab() === 'api') {
+      <section class="api-section">
+        <h2>Публичный API</h2>
+        <p>Параметры сверены с экспортируемыми классами <code>&#64;argent/webapp-common</code>. Поля с типом «Вход» у компонентов передаются через Angular-привязки.</p>
+        <div class="api-table-wrap">
+          <table class="docs-api-table">
+            <thead><tr><th>Имя</th><th>Тип</th><th>Значение по умолчанию</th><th>Назначение</th></tr></thead>
+            <tbody>
+              @for (item of doc().api; track item.name) {
+                <tr><td><code>{{ item.name }}</code><small>{{ item.kind }}</small></td><td>{{ item.type }}</td><td>{{ item.defaultValue }}</td><td>{{ item.description }}</td></tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    } @else {
+      <section class="notes-section">
+        <h2>Как использовать</h2>
+        @for (note of doc().notes; track note; let index = $index) {
+          <div class="note-item"><span>{{ index + 1 }}</span><p>{{ note }}</p></div>
+        }
+        <h3 class="setup-title">Подключение к компоненту</h3>
+        <div class="source-card">
+          <div class="source-head"><div><span>ANGULAR</span><strong>Импорты</strong></div>
+            <button type="button" (click)="copySetupCode()"><i class="pi pi-copy"></i> Копировать</button>
+          </div>
+          <pre><code>{{ setupCode() }}</code></pre>
+        </div>
+        <div class="guide-message"><i class="pi pi-book"></i> Все примеры используют публичный API <code>&#64;argent/webapp-common</code>, не внутренние пути библиотеки.</div>
+      </section>
+    }
+  </article>
+</div>
